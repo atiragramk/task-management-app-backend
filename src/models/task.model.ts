@@ -1,5 +1,5 @@
 import { Schema, Types, model } from "mongoose";
-import { TaskPriority, Task, TaskState } from "../types";
+import { TaskPriority, Task, TaskState, Filter, Match } from "../types";
 import ModelMixIn from "../mixIns";
 
 export const taskSchema = new Schema(
@@ -52,23 +52,36 @@ taskSchema.pre("save", function (next) {
 });
 
 class TaskModel extends ModelMixIn<Task>("task", taskSchema) {
-  getTasksByStatus(status: string) {
-    return this.model.find({ status });
-  }
-  async getAllTasks() {
-    return this.model.aggregate([
-      {
-        $group: {
-          _id: "$statusId",
-          records: {
-            $push: "$$ROOT",
-          },
+  async getAllTasks(query: Filter) {
+    const { status, priority, search } = query;
+    const match: Match = {};
+    if (status) {
+      match.statusId = status;
+    }
+    if (priority) {
+      match.priority = priority;
+    }
+    if (search) {
+      match.title = new RegExp(search);
+    }
+
+    const aggregate = [];
+    if (Object.keys(match).length) {
+      aggregate.push({ $match: match });
+    }
+    aggregate.push({
+      $group: {
+        _id: "$statusId",
+        records: {
+          $push: "$$ROOT",
+        },
+        count: {
+          $sum: 1,
         },
       },
-    ]);
-    // return this.model
-    //   .find()
-    //   .populate({ path: "statusId", select: "displayName" });
+    });
+
+    return this.model.aggregate(aggregate);
   }
 }
 

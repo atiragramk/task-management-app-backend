@@ -51,3 +51,15 @@ export type Status = {
   displayName: string;
   key: string;
 };
+
+export type Filter = {
+  status?: string;
+  priority?: string;
+  search?: string;
+};
+
+export type Match = {
+  title?: RegExp;
+  statusId?: string;
+  priority?: string;
+};

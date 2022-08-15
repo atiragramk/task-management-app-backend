@@ -1,11 +1,11 @@
 import TaskModel from "../models/task.model";
-import { Task } from "../types";
+import { Filter, Task } from "../types";
 
 class TaskService {
   constructor(private task: TaskModel = task) {}
 
-  async getTask() {
-    const tasks = await this.task.getAllTasks();
+  async getTask(query: Filter) {
+    const tasks = await this.task.getAllTasks(query);
     if (!tasks) {
       throw new Error("The tasks do not exist");
     }

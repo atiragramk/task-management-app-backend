@@ -2,7 +2,7 @@ import { BasicController } from "./basic.controller";
 import { Request, Response } from "express";
 
 import * as yup from "yup";
-import { Task } from "../types";
+import { Task, Filter } from "../types";
 import TaskService from "../services/task.service";
 
 class TaskController extends BasicController {
@@ -20,7 +20,8 @@ class TaskController extends BasicController {
 
   async getAllTasks(req: Request, res: Response) {
     try {
-      const tasks = await this.taskService.getTask();
+      const { query } = req;
+      const tasks = await this.taskService.getTask(query);
       return this.successResponse(res, tasks);
     } catch (error) {
       return this.errorResponse(res, error);
