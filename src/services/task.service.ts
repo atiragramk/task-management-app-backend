@@ -4,7 +4,11 @@ import { Filter, Task } from "../types";
 class TaskService {
   constructor(private task: TaskModel = task) {}
 
-  async getTask(query: Filter) {
+  async getTask(id: string) {
+    return await this.task.getTaskById(id);
+  }
+
+  async getTasks(query: Filter) {
     const tasks = await this.task.getAllTasks(query);
     if (!tasks) {
       throw new Error("The tasks do not exist");
@@ -21,10 +25,27 @@ class TaskService {
       description: body?.description,
       statusId: body.statusId,
       priority: body.priority,
-      asignee: body?.assignee,
+      assignee: body?.assignee,
       projectId: body.projectId,
+      state: body?.state,
     });
     return await task.save();
+  }
+
+  async updateTask(id: string, body: Partial<Task>) {
+    const task = await this.getTask(id);
+    if (!task) {
+      throw new Error("Task does not exist");
+    }
+    return await this.task.updateTaskById(id, body);
+  }
+
+  async deleteTask(id: string) {
+    const task = await this.getTask(id);
+    if (!task) {
+      throw new Error("Task does not exist");
+    }
+    return await this.task.setStateToDeleted(id);
   }
 }
 

@@ -2,7 +2,7 @@ import { Schema } from "mongoose";
 import ModelMixIn from "../mixIns";
 import { User } from "../types";
 
-const userSchema = new Schema(
+export const userSchema = new Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -16,6 +16,7 @@ const userSchema = new Schema(
         message: () => "Email is invalid",
       },
     },
+    color: { type: String, required: true },
   },
   { timestamps: true }
 );

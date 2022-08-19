@@ -1,6 +1,8 @@
 import { Schema, Types, model } from "mongoose";
 import { TaskPriority, Task, TaskState, Filter, Match } from "../types";
 import ModelMixIn from "../mixIns";
+import { userSchema } from "./user.model";
+import StatusModel from "./status.model";
 
 export const taskSchema = new Schema(
   {
@@ -28,7 +30,7 @@ export const taskSchema = new Schema(
       index: true,
       required: true,
     },
-    asignee: { type: Types.ObjectId },
+    assignee: [userSchema],
     state: {
       type: String,
       enum: [TaskState.ACTIVE, TaskState.DELETED],
@@ -54,7 +56,7 @@ taskSchema.pre("save", function (next) {
 class TaskModel extends ModelMixIn<Task>("task", taskSchema) {
   async getAllTasks(query: Filter) {
     const { status, priority, search } = query;
-    const match: Match = {};
+    const match: Match = { state: "active" };
     if (status) {
       match.statusId = status;
     }
@@ -62,7 +64,7 @@ class TaskModel extends ModelMixIn<Task>("task", taskSchema) {
       match.priority = priority;
     }
     if (search) {
-      match.title = new RegExp(search);
+      match.title = new RegExp(search, "i");
     }
 
     const aggregate = [];
@@ -82,6 +84,22 @@ class TaskModel extends ModelMixIn<Task>("task", taskSchema) {
     });
 
     return this.model.aggregate(aggregate);
+  }
+
+  getTaskById(id: string) {
+    return this.model.findById(id);
+  }
+
+  updateTaskById(id: string, data: Partial<Task>) {
+    return this.model.findByIdAndUpdate(id, data, { new: true });
+  }
+
+  setStateToDeleted(id: string) {
+    return this.model.findByIdAndUpdate(
+      id,
+      { state: TaskState.DELETED },
+      { new: true }
+    );
   }
 }
 

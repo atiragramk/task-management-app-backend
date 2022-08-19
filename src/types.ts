@@ -37,6 +37,7 @@ export type Task = {
   priority: TaskPriority;
   assignee?: Types.ObjectId;
   projectId: Types.ObjectId;
+  state?: string;
 };
 
 export type Project = {
@@ -59,6 +60,7 @@ export type Filter = {
 };
 
 export type Match = {
+  state: string;
   title?: RegExp;
   statusId?: string;
   priority?: string;

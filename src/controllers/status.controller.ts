@@ -2,15 +2,18 @@ import { BasicController } from "./basic.controller";
 import { Request, Response } from "express";
 
 import StatusService from "../services/status.service";
-import * as yup from "yup";
+import { createStatusSchema } from "../validation";
 
 class StatusController extends BasicController {
+  createStatusSchema: typeof createStatusSchema;
   constructor(private statusService: StatusService = statusService) {
     super();
+    this.createStatusSchema = createStatusSchema;
   }
 
   async createStatus(req: Request, res: Response) {
     try {
+      await this.createStatusSchema.validate(req.body);
       const status = await this.statusService.createStatus(req.body.key);
       return this.successResponse(res, status);
     } catch (error) {
