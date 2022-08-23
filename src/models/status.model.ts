@@ -23,6 +23,13 @@ class StatusModel extends ModelMixIn<Status>("status", statusSchema) {
   getAllStatuses() {
     return this.model.find();
   }
+
+  deleteStatusById(id: string) {
+    if (!id) {
+      throw new Error("ID is required");
+    }
+    return this.model.findByIdAndDelete(id);
+  }
 }
 
 export default StatusModel;

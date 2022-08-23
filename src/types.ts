@@ -57,6 +57,8 @@ export type Filter = {
   status?: string;
   priority?: string;
   search?: string;
+  assignee?: string[];
+  projectId?: string;
 };
 
 export type Match = {
@@ -64,4 +66,12 @@ export type Match = {
   title?: RegExp;
   statusId?: string;
   priority?: string;
+  projectId?: string;
+  assignee?: {
+    $elemMatch: {
+      email: {
+        $in: string[];
+      };
+    };
+  };
 };

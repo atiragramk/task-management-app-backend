@@ -19,7 +19,7 @@ export const createTaskSchema = yup.object().shape({
     .mixed<TaskPriority>()
     .oneOf(Object.values(TaskPriority))
     .required(),
-  projectId: yup.string().required(),
+  projectId: yup.string(),
   assignee: yup.array().of(assigneeTaskSchema),
 });
 

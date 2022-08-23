@@ -4,7 +4,9 @@ class StatusService {
   constructor(private status: StatusModel = status) {}
 
   async createStatus(key: string) {
-    const existStatus = await this.status.getStatusByKey(key);
+    const existStatus = await this.status.getStatusByKey(
+      key.toLowerCase().trim()
+    );
     if (existStatus) {
       throw new Error("This status is already exist");
     }
@@ -15,6 +17,10 @@ class StatusService {
 
   async getAllStatuses() {
     return await this.status.getAllStatuses();
+  }
+
+  async deleteStatus(id: string) {
+    return await this.status.deleteStatusById(id);
   }
 }
 

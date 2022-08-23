@@ -11,5 +11,6 @@ const router = express.Router();
 
 router.post("/", statusController.createStatus.bind(statusController));
 router.get("/", statusController.getAllStatuses.bind(statusController));
+router.delete("/:id", statusController.deleteStatus.bind(statusController));
 
 export default router;

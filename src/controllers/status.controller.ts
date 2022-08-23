@@ -29,6 +29,15 @@ class StatusController extends BasicController {
       return this.errorResponse(res, error);
     }
   }
+
+  async deleteStatus(req: Request, res: Response) {
+    try {
+      const status = await this.statusService.deleteStatus(req.params.id);
+      return this.successResponse(res, status);
+    } catch (error) {
+      return this.errorResponse(res, error);
+    }
+  }
 }
 
 export default StatusController;

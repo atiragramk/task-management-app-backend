@@ -1,8 +1,7 @@
-import { Schema, Types, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import { TaskPriority, Task, TaskState, Filter, Match } from "../types";
 import ModelMixIn from "../mixIns";
 import { userSchema } from "./user.model";
-import StatusModel from "./status.model";
 
 export const taskSchema = new Schema(
   {
@@ -26,9 +25,9 @@ export const taskSchema = new Schema(
       index: true,
     },
     projectId: {
-      type: Types.ObjectId,
-      index: true,
+      type: String,
       required: true,
+      index: true,
     },
     assignee: [userSchema],
     state: {
@@ -46,7 +45,7 @@ taskSchema.pre("save", function (next) {
     if (!modal) {
       modal = model("task");
     }
-    modal.find({}).then((entries) => {
+    modal.find({ projectId: this.projectId }).then((entries) => {
       this.key = entries.length + 1;
       next();
     });
@@ -55,7 +54,7 @@ taskSchema.pre("save", function (next) {
 
 class TaskModel extends ModelMixIn<Task>("task", taskSchema) {
   async getAllTasks(query: Filter) {
-    const { status, priority, search } = query;
+    const { status, priority, search, assignee, projectId } = query;
     const match: Match = { state: "active" };
     if (status) {
       match.statusId = status;
@@ -65,6 +64,12 @@ class TaskModel extends ModelMixIn<Task>("task", taskSchema) {
     }
     if (search) {
       match.title = new RegExp(search, "i");
+    }
+    if (projectId) {
+      match.projectId = projectId;
+    }
+    if (assignee) {
+      match.assignee = { $elemMatch: { email: { $in: assignee } } };
     }
 
     const aggregate = [];
