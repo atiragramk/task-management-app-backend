@@ -58,8 +58,8 @@ class AuthService {
       const token = await this.generateToken(user);
       user.token = String(token);
       await user.save();
-
-      return token;
+      const { _id } = user;
+      return { token, _id };
     } catch (error) {
       throw error;
     }

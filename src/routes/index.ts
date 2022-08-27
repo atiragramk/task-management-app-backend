@@ -7,14 +7,9 @@ import isAuthMiddleware from "../middlewares/isAuth.middleware";
 
 const router = express.Router();
 
-// router.use("/statuses", isAuthMiddleware, statusRouter);
-// router.use("/projects", isAuthMiddleware, projectRouter);
-
-// router.use("/tasks", isAuthMiddleware, taskRouter);
-
-router.use("/statuses", statusRouter);
-router.use("/projects", projectRouter);
+router.use("/statuses", isAuthMiddleware, statusRouter);
+router.use("/projects", isAuthMiddleware, projectRouter);
 router.use("/auth", authRouter);
-router.use("/tasks", taskRouter);
+router.use("/tasks", isAuthMiddleware, taskRouter);
 
 export default router;
