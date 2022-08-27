@@ -1,14 +1,18 @@
 import ProjectService from "../services/project.service";
 import { BasicController } from "./basic.controller";
 import { Request, Response } from "express";
+import { createProjectSchema } from "../validation";
 
 class ProjectController extends BasicController {
+  createProjectSchema: typeof createProjectSchema;
   constructor(private projectService: ProjectService = projectService) {
     super();
+    this.createProjectSchema = createProjectSchema;
   }
 
   async createProject(req: Request, res: Response) {
     try {
+      await this.createProjectSchema.validate(req.body);
       const project = await this.projectService.createProject(
         req.body.name,
         req.body.description

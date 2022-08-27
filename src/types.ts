@@ -23,10 +23,13 @@ export enum TaskPriority {
 }
 
 export type User = {
-  _id: Types.ObjectId;
+  _id?: Types.ObjectId;
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
+  color: string;
+  token?: string;
 };
 
 export type Task = {
@@ -62,7 +65,7 @@ export type Filter = {
 };
 
 export type Match = {
-  state: string;
+  state?: string;
   title?: RegExp;
   statusId?: string;
   priority?: string;
@@ -74,4 +77,14 @@ export type Match = {
       };
     };
   };
+};
+
+export type UserInput = {
+  email: string;
+  password: string;
+};
+
+export type Context = {
+  token?: string;
+  user?: User;
 };

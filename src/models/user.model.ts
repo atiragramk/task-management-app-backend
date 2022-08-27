@@ -16,7 +16,9 @@ export const userSchema = new Schema(
         message: () => "Email is invalid",
       },
     },
+    password: { type: String, required: true },
     color: { type: String, required: true },
+    token: { type: String },
   },
   { timestamps: true }
 );

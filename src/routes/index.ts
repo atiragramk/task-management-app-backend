@@ -1,14 +1,20 @@
 import express from "express";
 import statusRouter from "./status.router";
 import projectRouter from "./project.router";
-import userRouter from "./user.router";
+import authRouter from "./auth.router";
 import taskRouter from "./task.router";
+import isAuthMiddleware from "../middlewares/isAuth.middleware";
 
 const router = express.Router();
 
+// router.use("/statuses", isAuthMiddleware, statusRouter);
+// router.use("/projects", isAuthMiddleware, projectRouter);
+
+// router.use("/tasks", isAuthMiddleware, taskRouter);
+
 router.use("/statuses", statusRouter);
 router.use("/projects", projectRouter);
-router.use("/users", userRouter);
+router.use("/auth", authRouter);
 router.use("/tasks", taskRouter);
 
 export default router;

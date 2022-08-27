@@ -2,7 +2,16 @@ import express from "express";
 import mongoose from "mongoose";
 import router from "./routes";
 import cors from "cors";
+import { Context } from "./types";
+import accessTokenMiddleware from "./middlewares/accessToken.middleware";
 
+declare global {
+  namespace Express {
+    interface Request {
+      context?: Context;
+    }
+  }
+}
 const { PORT, MONGO_URI } = process.env;
 
 const app = express();
@@ -11,7 +20,9 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(cors());
 
-app.use("/api", router);
+app.use("/api", accessTokenMiddleware, router);
+// app.use("/api", router);
+
 app.use("*", (req, res) => {
   res.status(404).json({
     message: "Not found",

@@ -5,7 +5,7 @@ import { Project } from "../types";
 const projectSchema = new Schema(
   {
     name: { type: String, required: true },
-    shortName: { type: String },
+    shortName: { type: String, required: true },
     description: { type: String, required: true },
   },
   { timestamps: true }

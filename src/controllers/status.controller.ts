@@ -14,7 +14,10 @@ class StatusController extends BasicController {
   async createStatus(req: Request, res: Response) {
     try {
       await this.createStatusSchema.validate(req.body);
-      const status = await this.statusService.createStatus(req.body.key);
+      const status = await this.statusService.createStatus(
+        req.body.key,
+        req.body.projectId
+      );
       return this.successResponse(res, status);
     } catch (error) {
       return this.errorResponse(res, error);
@@ -23,7 +26,8 @@ class StatusController extends BasicController {
 
   async getAllStatuses(req: Request, res: Response) {
     try {
-      const status = await this.statusService.getAllStatuses();
+      const { query } = req;
+      const status = await this.statusService.getAllStatuses(query);
       return this.successResponse(res, status);
     } catch (error) {
       return this.errorResponse(res, error);

@@ -34,6 +34,7 @@ export const updateTaskSchema = yup.object().shape({
 
 export const createStatusSchema = yup.object().shape({
   key: yup.string().required(),
+  projectId: yup.string().required(),
 });
 
 export const createUserSchema = yup.object().shape({
@@ -41,4 +42,10 @@ export const createUserSchema = yup.object().shape({
   lastName: yup.string().required(),
   email: yup.string().email().required(),
   color: yup.string().required(),
+  password: yup.string().required(),
+});
+
+export const createProjectSchema = yup.object().shape({
+  name: yup.string().required(),
+  description: yup.string().required(),
 });
