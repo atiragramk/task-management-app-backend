@@ -16,7 +16,7 @@ export const userSchema = new Schema(
         message: () => "Email is invalid",
       },
     },
-    password: { type: String, required: true },
+    password: { type: String },
     color: { type: String, required: true },
     token: { type: String },
   },
@@ -25,7 +25,8 @@ export const userSchema = new Schema(
 
 class UserModel extends ModelMixIn<User>("user", userSchema) {
   getAllUsers() {
-    return this.model.find();
+    return this.model.aggregate([{ $project: { "password": 0 } }]);
+
   }
 
   getUserByEmail(email: string) {

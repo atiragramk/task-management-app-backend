@@ -6,13 +6,13 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 class AuthService {
-  constructor(private user: UserModel = user) {}
+  constructor(private user: UserModel = user) { }
 
   async getUserByEmail(email: string) {
     return await this.user.getUserByEmail(email);
   }
 
-  getUser(id: string) {
+  async getUser(id: string) {
     return this.user.getUserById(id);
   }
 
@@ -35,7 +35,13 @@ class AuthService {
         password: hashedPassword,
       });
       await user.save();
-      return user;
+      return {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        color: user.color,
+        email: user.email,
+        password: ''
+      };
     } catch (error) {
       throw error;
     }
@@ -58,8 +64,8 @@ class AuthService {
       const token = await this.generateToken(user);
       user.token = String(token);
       await user.save();
-      const { _id } = user;
-      return { token, _id };
+      const { _id, firstName, lastName, email } = user;
+      return { token, _id, firstName, lastName, email };
     } catch (error) {
       throw error;
     }
